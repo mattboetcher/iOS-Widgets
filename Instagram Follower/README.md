@@ -1,2 +1,2 @@
 # Instagram Follower
-Add you username as parameter
+Add your username as parameter
