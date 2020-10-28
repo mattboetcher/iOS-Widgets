@@ -39,18 +39,17 @@ function createTimeLine(total, hasPassed, name) {
   graph.imageSize = new Size(width, height)
   widget.addSpacer(2)
   
-  
   const text = widget.addStack()
   text.textColor = Color.black()
   text.addText("*")
   text.addSpacer()
+  // if you want to display your age
 //   text.addText("-" + (now.getFullYear()-year).toString() + "-")
 //   text.addSpacer()
   text.addText("†")
-  
 }
 
-function createProgress(total,hasPassed) {
+function createProgress(total, hasPassed) {
   const context = new DrawContext()
   context.size = new Size(width, height)
   context.opaque = false
@@ -63,9 +62,9 @@ function createProgress(total,hasPassed) {
   context.fillPath()
   context.setFillColor(Color.green())
   
-  const path1 = new Path()
+  const pathHighlighted = new Path()
   path1.addRoundedRect(new Rect(0, 0, width * hasPassed / total, height), 3, 3)
-  context.addPath(path1)
+  context.addPath(pathHighlighted)
   context.fillPath()
   return context.getImage()
 }
