@@ -2,7 +2,8 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: blue; icon-glyph: magic; share-sheet-inputs: plain-text;
 /**************
- Version 1.0
+ Version 1.1 - Optimized code. 
+ Version 1.0 - First Version
 
 Credits: 
 Matthias Boetcher mattboetcher@github
@@ -13,11 +14,11 @@ const DEFAULT_FONT_SIZE = 13
 const TEXT_COLOR = Color.white()
 
 let maxContent = 6
-let widgetSize = args.widgetParameter
-// for debugging only
-widgetSize = "medium"
 
-if (widgetSize == "large") {
+// for debugging only
+//let widgetSize = "large"
+
+if (config.runsInApp) {
   maxContent = 14
 } 
 
@@ -42,7 +43,7 @@ if (!config.runsInWidget) {
     default:
       console.log("no size")
       break
-    }
+  }
 }
 
 Script.setWidget(widget)
@@ -61,7 +62,7 @@ async function createWidget(json) {
   titleStack.layoutHorizontally()
   createTitleStack(titleStack, "Teams", 95)
   createTitleStack(titleStack, "Scores", 65)
-  if (widgetSize != "small") {
+  if (config.widgetFamily != "small") {
     createTitleStack(titleStack, "Qtr", 50)
     createTitleStack(titleStack, "Dwn", 30)
     createTitleStack(titleStack, "Togo", 35)
@@ -101,7 +102,7 @@ async function createWidget(json) {
     // Create Score Stack
     createTextStack(stack, `${json[key].home.score["T"]}`/`${json[key].away.score["T"]}`, 60)
     
-    if (widgetSize != "small" ) {
+    if (config.widgetFamily != "small") {
     // Create Quater Stack
       createTextStack(stack, `${json[key].qtr}`, 60)
       createTextStack(stack, `${json[key].down}`, 20)
