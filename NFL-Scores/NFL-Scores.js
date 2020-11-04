@@ -45,7 +45,6 @@ if (!config.runsInWidget) {
     }
 }
 
-// widget.presentLarge()
 Script.setWidget(widget)
 Script.complete()
 
@@ -60,7 +59,6 @@ async function createWidget(json) {
   // Create Title
   const titleStack = widget.addStack()
   titleStack.layoutHorizontally()
-//   titleStack.leftAlignText()
   createTitleStack(titleStack, "Teams", 95)
   createTitleStack(titleStack, "Scores", 65)
   if (widgetSize != "small") {
@@ -141,7 +139,6 @@ function createTextStack(stack, text, width) {
   const widgetText = tmpStack.addText(check(text))
   widgetText.font = Font.systemFont(DEFAULT_FONT_SIZE)
   widgetText.textColor = TEXT_COLOR
-//   widgetText.leftAlignText()
   
   return widgetText
 }
@@ -152,7 +149,6 @@ function createTitleStack(stack, text, width) {
   const widgetTitle = tmpStack.addText(text)
   widgetTitle.font = Font.boldSystemFont(DEFAULT_FONT_SIZE)
   widgetTitle.textColor = TEXT_COLOR
-//   widgetTitle.leftAlignText()
   
   return widgetTitle
 }
@@ -182,39 +178,39 @@ function formatDate(timestamp) {
 
 // get images from local filestore or download them once
 async function getImage(image, key) {
-   let fm = FileManager.local()
-   let dir = fm.documentsDirectory()
-   let path = fm.joinPath(dir, image)
+  let fm = FileManager.local()
+  let dir = fm.documentsDirectory()
+  let path = fm.joinPath(dir, image)
    
-   if (fm.fileExists(path)) {
-        return fm.readImage(path)
-   } else {
-       // download once
-       let imageUrl
+  if (fm.fileExists(path)) {
+    return fm.readImage(path)
+  } else {
+    // download once
+    let imageUrl
       
-       switch (image) {
-         // necessary, JAC logo is named JAX
-         case 'JAC.png':
-           imageUrl = `https://static.www.nfl.com/t_q-best/league/api/clubs/logos/JAX.png`;
-            console.log(imageUrl)
-            break
-         case `${json[key].home.abbr}.png`:
-           imageUrl = `https://static.www.nfl.com/t_q-best/league/api/clubs/logos/${json[key].home.abbr}.png`;
-            console.log(imageUrl)
-            break
-          case `${json[key].away.abbr}.png`:
-            imageUrl = `https://static.www.nfl.com/t_q-best/league/api/clubs/logos/${json[key].away.abbr}.png`;
-            console.log(imageUrl)
-            break
-          default:
-            console.log(`Sorry, couldn't find ${image}.`);
-            break
-        }
-        console.log(path)
+    switch (image) {
+    // necessary, JAC logo is named JAX
+      case 'JAC.png':
+        imageUrl = `https://static.www.nfl.com/t_q-best/league/api/clubs/logos/JAX.png`;
+        console.log(imageUrl)
+        break
+      case `${json[key].home.abbr}.png`:
+        imageUrl = `https://static.www.nfl.com/t_q-best/league/api/clubs/logos/${json[key].home.abbr}.png`;
+        console.log(imageUrl)
+        break
+      case `${json[key].away.abbr}.png`:
+        imageUrl = `https://static.www.nfl.com/t_q-best/league/api/clubs/logos/${json[key].away.abbr}.png`;
+        console.log(imageUrl)
+        break
+      default:
+        console.log(`Sorry, couldn't find ${image}.`);
+        break
+      }
+      console.log(path)
         
-        let iconImage = await loadImage(imageUrl)
-        console.log(iconImage)
-        fm.writeImage(path, iconImage)
-        return iconImage
-    }
+      let iconImage = await loadImage(imageUrl)
+      console.log(iconImage)
+      fm.writeImage(path, iconImage)
+      return iconImage
+   }
 }
