@@ -1,6 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: blue; icon-glyph: magic; share-sheet-inputs: plain-text;
+// icon-color: deep-blue; icon-glyph: football-ball;
+// share-sheet-inputs: plain-text;
 /**************
  Version 1.1 - Optimized code. 
  Version 1.0 - First Version
