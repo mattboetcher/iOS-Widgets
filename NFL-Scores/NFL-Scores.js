@@ -17,7 +17,7 @@ const TEXT_COLOR = Color.white()
 let maxContent = 6
 
 // for debugging only
-//let widgetSize = "large"
+let widgetSize = "large"
 
 if (config.runsInApp) {
   maxContent = 14
