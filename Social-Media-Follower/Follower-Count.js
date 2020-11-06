@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: green; icon-glyph: users;
 /**************************************************************
-Version 1.0
+Version 1.1
 **************************************************************/
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
@@ -14,10 +14,11 @@ let widgetInput = null;
 
 let instagram, youtube, tiktok
 
+//Add usernames here
 if (config.runsInApp) {
-  instagram = "matthiasboetcher"
-  youtube = "mattboetcher"
-  tiktok = "matthiasboetcher"
+  instagram = ""
+  youtube = ""
+  tiktok = ""
 }
 
 if (widgetInputRAW !== null) {
@@ -27,6 +28,10 @@ if (widgetInputRAW !== null) {
     throw new Error("Invalid Widget parameter. Expected format: Instagram|YouTube|TikTok") 
   }
 }
+
+const BACKCOLOR1 = 'C6FFDD';
+const BACKCOLOR2 = 'FBD786';
+const BACKCOLOR3 = 'F7797D';
 
 const widget = new ListWidget()
 await createWidget()
@@ -40,7 +45,16 @@ Script.complete()
 
 // build the content of the widget
 async function createWidget() {
-	
+    
+  const gradient = new LinearGradient()
+  gradient.locations = [0, 1]
+  gradient.colors = [
+    new Color(BACKCOLOR),
+    new Color(BACKCOLOR2),
+    new Color(BACKCOLOR3)
+  ]
+  widget.backgroundGradient = gradient
+  
   // Create URL
   const urlInstagram = "https://www.instagram.com/" + instagram + "/"
   const urlYouTube = "https://www.youtube.com/user/" + youtube + "/"
