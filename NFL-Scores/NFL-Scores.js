@@ -3,8 +3,7 @@
 // icon-color: deep-blue; icon-glyph: football-ball;
 // share-sheet-inputs: plain-text;
 /**************
- Version 1.1 - Optimized code. 
- Version 1.0 - First Version
+ Version 1.2 
 
 Credits: 
 Matthias Boetcher mattboetcher@github
@@ -64,10 +63,10 @@ async function createWidget(json) {
   createTitleStack(titleStack, "Teams", 95)
   createTitleStack(titleStack, "Scores", 65)
   if (config.widgetFamily != "small") {
-    createTitleStack(titleStack, "Qtr", 50)
+    createTitleStack(titleStack, "Qtr", 40)
     createTitleStack(titleStack, "Dwn", 30)
     createTitleStack(titleStack, "Togo", 35)
-    createTitleStack(titleStack, "TV", 20)
+    createTitleStack(titleStack, "TV", 30)
   }
   widget.addSpacer(1)
 //   console.log(json)
@@ -101,14 +100,17 @@ async function createWidget(json) {
     imgAwayWidget.imageSize = new Size(16, 16)
     
     // Create Score Stack
-    createTextStack(stack, `${json[key].home.score["T"]}`/`${json[key].away.score["T"]}`, 60)
+    const scoreHome = check(`${json[key].home.score["T"]}`)
+    const scoreAway = check(`${json[key].away.score["T"]}`)
+    
+    createTextStack(stack, `${scoreHome}/${scoreAway}`, 60)
     
     if (config.widgetFamily != "small") {
     // Create Quater Stack
-      createTextStack(stack, `${json[key].qtr}`, 60)
-      createTextStack(stack, `${json[key].down}`, 20)
-      createTextStack(stack, `${json[key].togo}`, 20)
-      createTextStack(stack, `${json[key].media.tv}`, 45)
+      createTextStack(stack, `${json[key].qtr}`, 45)
+      createTextStack(stack, `${json[key].down}`, 35)
+      createTextStack(stack, `${json[key].togo}`, 25)
+      createTextStack(stack, `${json[key].media.tv}`, 40)
     }
     
     widget.addSpacer(0)
