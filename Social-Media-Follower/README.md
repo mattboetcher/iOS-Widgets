@@ -1,4 +1,4 @@
-# Instagram Follower
-This widget shows your current Instagram follower count. Add your username as parameter.
+# Social Media Followers
+This widget shows your current Instagram, Youtube and Tiktok follower count.
 
-<img src="https://github.com/mattboetcher/iOS-Widgets/blob/main/Instagram-Follower/Instagram.jpg" width="350px">
+Add your usernames in the parameter field as followed: instagram|youtube|tiktok
