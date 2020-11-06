@@ -3,7 +3,7 @@
 // icon-color: deep-blue; icon-glyph: football-ball;
 // share-sheet-inputs: plain-text;
 /**************
- Version 1.2 
+ Version 1.3
 
 Credits: 
 Matthias Boetcher mattboetcher@github
@@ -12,6 +12,8 @@ https://github.com/mattboetcher/iOS-Widgets/
 
 const DEFAULT_FONT_SIZE = 13
 const TEXT_COLOR = Color.white()
+const BACKCOLOR1 = '2980B9'
+const BACKCOLOR2 = '013369';
 
 let maxContent = 6
 
@@ -54,8 +56,14 @@ Script.complete()
 // build the content of the widget
 async function createWidget(json) {
   
-  widget.backgroundColor = new Color("013369")
   widget.setPadding(18, 20, 15, 15)
+  const gradient = new LinearGradient()
+  gradient.locations = [0, 1]
+  gradient.colors = [
+    new Color(BACKCOLOR1),
+    new Color(BACKCOLOR2)
+  ]
+  widget.backgroundGradient = gradient
   
   // Create Title
   const titleStack = widget.addStack()
