@@ -3,7 +3,7 @@
 // icon-color: deep-blue; icon-glyph: football-ball;
 // share-sheet-inputs: plain-text;
 /**************
- Version 1.3
+ Version 1.4
 
 Credits: 
 Matthias Boetcher mattboetcher@github
@@ -16,6 +16,9 @@ const BACKCOLOR1 = '2980B9'
 const BACKCOLOR2 = '013369';
 
 let maxContent = 6
+var today = new Date();
+// How many minutes should the cache be valid
+let cacheMinutes = 0;
 
 // for debugging only
 let widgetSize = "large"
@@ -68,13 +71,12 @@ async function createWidget(json) {
   // Create Title
   const titleStack = widget.addStack()
   titleStack.layoutHorizontally()
-  createTitleStack(titleStack, "Teams", 95)
+  createTitleStack(titleStack, "Teams", 100)
   createTitleStack(titleStack, "Scores", 65)
   if (config.widgetFamily != "small") {
-    createTitleStack(titleStack, "Qtr", 40)
-    createTitleStack(titleStack, "Dwn", 30)
-    createTitleStack(titleStack, "Togo", 35)
-    createTitleStack(titleStack, "TV", 30)
+    createTitleStack(titleStack, "Quater", 50)
+    createTitleStack(titleStack, "Down", 45)
+    createTitleStack(titleStack, "TV", 40)
   }
   widget.addSpacer(1)
 //   console.log(json)
@@ -93,31 +95,31 @@ async function createWidget(json) {
     stack.centerAlignContent()
     
     // Load logo home
-    const image = await getImage(`${json[key].home.abbr}.png`, key)
-    const imgHomeWidget = stack.addImage(image)
+    const imageHome = await getImage(`${json[key].home.abbr}.png`, key)
+    const imgHomeWidget = stack.addImage(imageHome)
     imgHomeWidget.imageSize = new Size(16, 16)
     
     // Create Teams Stack
-    createTextStack(stack, `${json[key].home.abbr}`, 28)
+    createTextStack(stack, `${json[key].home.abbr}`, 31)
     createTextStack(stack, `-`, 10)
-    createTextStack(stack, `${json[key].away.abbr}`, 27)
+    createTextStack(stack, `${json[key].away.abbr}`, 31)
     
     // Load logo away
-    const image2 = await getImage(`${json[key].away.abbr}.png`, key)
-    const imgAwayWidget = stack.addImage(image2)
+    const imageAway = await getImage(`${json[key].away.abbr}.png`, key)
+    const imgAwayWidget = stack.addImage(imageAway)
     imgAwayWidget.imageSize = new Size(16, 16)
     
     // Create Score Stack
     const scoreHome = check(`${json[key].home.score["T"]}`)
     const scoreAway = check(`${json[key].away.score["T"]}`)
     
-    createTextStack(stack, `${scoreHome}/${scoreAway}`, 60)
+    createTextStack(stack, `${scoreHome}/${scoreAway}`, 56)
     
-    if (config.widgetFamily != "small") {
     // Create Quater Stack
-      createTextStack(stack, `${json[key].qtr}`, 45)
-      createTextStack(stack, `${json[key].down}`, 35)
-      createTextStack(stack, `${json[key].togo}`, 25)
+    if (config.widgetFamily != "small") {
+      const down = convertString(`${json[key].down}`,`${json[key].togo}`)
+      createTextStack(stack, `${json[key].qtr}`, 55)
+      createTextStack(stack, `${down}`, 45)
       createTextStack(stack, `${json[key].media.tv}`, 40)
     }
     
@@ -126,11 +128,12 @@ async function createWidget(json) {
   }
   
   // Create Timestamp
-  let timeStamp = formatDate(new Date())
+  // If you want to see an update timestamp, uncomment this code below.    
+  /* let timeStamp = formatDate(new Date())
   let wDate = widget.addText(timeStamp);
   wDate.font = Font.mediumRoundedSystemFont(8)
   wDate.textColor = Color.gray();
-  wDate.centerAlignText();
+  wDate.centerAlignText(); */
   
   return widget
 }
@@ -143,6 +146,37 @@ function check(string) {
     return "-"
   }
   return `${string}`
+}
+
+function convertString(str1, str2) {
+  let string = ""
+  
+  if (str1 == "1") 
+  {
+    string = str1 + "st"
+  } 
+  else if (str1 == "2") 
+  {
+    string = str1 + "nd"
+  } 
+  else if (str1 == "3")
+  {
+    string = str1 + "rd"
+  } 
+  else if ( str1 == "0")
+  {
+    return string = "-"
+  }
+  else if (str1 == "null")
+  {
+    return string = "-"
+  }
+  else 
+  {
+    string = str1 + "th"
+  }
+  
+  return string + " & " + str2
 }
 
 function createTextStack(stack, text, width) {
@@ -165,12 +199,55 @@ function createTitleStack(stack, text, width) {
   return widgetTitle
 }
 
+
 async function loadJSONItems() {
+  // Set up the file manager.
+  const fm = FileManager.local()
+
+  // Set up cache.
+  const cachePath = fm.joinPath(fm.documentsDirectory(), "NFL-Scores")
+  const cacheExists = fm.fileExists(cachePath)
+  const cacheDate = cacheExists ? fm.modificationDate(cachePath) : 0
+  
+  // Get Data
   let url = "http://static.nfl.com/liveupdate/scores/scores.json"
   let req = new Request(url)
-  let json = await req.loadJSON()
-//   console.log(json)
-  return json
+  let data
+  let lastUpdate
+  
+  try {
+    // If cache exists and it has been less than x minutes since last request, use cached data.
+    if (cacheExists&& (today.getTime() - cacheDate.getTime()) < (cacheMinutes * 60 * 1000)) {
+      console.log("Get data from cache")
+      data = JSON.parse(fm.readString(cachePath))
+      lastUpdate = cacheDate
+    } else {
+      console.log("Get from API")    
+      data = await req.loadJSON()
+      console.log("Write data to cache")
+      
+      try {
+        fm.writeString(cachePath, JSON.stringify(data))
+      } catch (e) {
+          console.log("Creating cache failed!")
+          conosle.log(e)
+      }
+        
+      lastUpdate = today
+    }
+  } catch (e) {
+      console.error(e)
+      if (cacheExists) {
+        console.log("Get from cache")
+        data = JSON.parse(fm.readString(cachePath))
+        lastUpdate = cacheDate
+      } else {
+          console.log("No fallback to cache possible. Cache is missing.")
+      }
+  }
+  
+//   console.log(data)
+  return data
 }
 
 async function loadImage(imgUrl) {
