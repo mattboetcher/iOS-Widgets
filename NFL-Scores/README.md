@@ -1,4 +1,4 @@
-# NFL Games
+# NFL Scoreboard
 
 This widget shows the score of the current NFL games. Right now only the medium widgets work on the home screen. How ever in the Scriptable App itself the large widget works.
 
