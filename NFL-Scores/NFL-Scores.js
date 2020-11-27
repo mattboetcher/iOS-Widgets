@@ -3,14 +3,14 @@
 // icon-color: deep-blue; icon-glyph: football-ball;
 // share-sheet-inputs: plain-text;
 /**************
- Version 1.4
+ Version 1.5
 
 Credits: 
 Matthias Boetcher mattboetcher@github
 https://github.com/mattboetcher/iOS-Widgets/
 **************/
 
-const DEFAULT_FONT_SIZE = 13
+const DEFAULT_FONT_SIZE = 12
 const TEXT_COLOR = Color.white()
 const BACKCOLOR1 = '2980B9'
 const BACKCOLOR2 = '013369';
@@ -71,11 +71,11 @@ async function createWidget(json) {
   // Create Title
   const titleStack = widget.addStack()
   titleStack.layoutHorizontally()
-  createTitleStack(titleStack, "Teams", 100)
-  createTitleStack(titleStack, "Scores", 65)
+  createTitleStack(titleStack, "Teams", 98)
+  createTitleStack(titleStack, "Scores", 59)
   if (config.widgetFamily != "small") {
-    createTitleStack(titleStack, "Quater", 50)
-    createTitleStack(titleStack, "Down", 45)
+    createTitleStack(titleStack, "Quater", 54)
+    createTitleStack(titleStack, "Down", 49)
     createTitleStack(titleStack, "TV", 40)
   }
   widget.addSpacer(1)
@@ -113,13 +113,13 @@ async function createWidget(json) {
     const scoreHome = check(`${json[key].home.score["T"]}`)
     const scoreAway = check(`${json[key].away.score["T"]}`)
     
-    createTextStack(stack, `${scoreHome}/${scoreAway}`, 56)
+    createTextStack(stack, `${scoreHome}/${scoreAway}`, 50)
     
     // Create Quater Stack
     if (config.widgetFamily != "small") {
       const down = convertString(`${json[key].down}`,`${json[key].togo}`)
       createTextStack(stack, `${json[key].qtr}`, 55)
-      createTextStack(stack, `${down}`, 45)
+      createTextStack(stack, `${down}`, 55)
       createTextStack(stack, `${json[key].media.tv}`, 40)
     }
     
