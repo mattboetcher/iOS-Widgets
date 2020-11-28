@@ -1,6 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: yellow; icon-glyph: magic;
+// Inspired by @Juniorchen2012
 
 const width = 125
 const height = 5
@@ -63,7 +64,7 @@ function createProgress(total, hasPassed) {
   context.setFillColor(Color.green())
   
   const pathHighlighted = new Path()
-  path1.addRoundedRect(new Rect(0, 0, width * hasPassed / total, height), 3, 3)
+  pathHighlighted.addRoundedRect(new Rect(0, 0, width * hasPassed / total, height), 3, 3)
   context.addPath(pathHighlighted)
   context.fillPath()
   return context.getImage()
