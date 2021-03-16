@@ -1,15 +1,24 @@
-/**************************************************************
-Version 1.0
-**************************************************************/
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: red; icon-glyph: magic;
 
+/**************************************************************
+Version 1.1
+
+History:
+Version 1.1 - Fixed an issue where website was not loaded.
+Version 1.0 - First Version
+
+Credits: 
+Matthias Boetcher mattboetcher@github
+https://github.com/mattboetcher/iOS-Widgets/
+**************************************************************/
+
 // Instagram account name via parameter
 let igAccount = args.widgetParameter
-if (!igAccount) {
-  igAccount = "INSERT YOUR INSTAGRAM ACCOUNT NAME HERE"
-}
+if (!igAccount)
+  igAccount = "matthiasboetcher" //replace with your username 
+
 const widget = new ListWidget()
 await createWidget()
 
@@ -20,15 +29,20 @@ if (!config.runsInWidget) {
 Script.setWidget(widget)
 Script.complete()
 
+async function loadHTML() { 
+  let url = "https://instagram.com/" + igAccount + "/?__a=1"
+  let req = new Request(url) 
+  let html = await req.loadString() 
+  return html 
+}
+
 // build the content of the widget
 async function createWidget() {
-	
-  // Create URL
-  const url = "https://www.instagram.com/" + igAccount + "/"
-  let req = new Request(url)
-  let html = await req.loadString()
-  let follower = getfollower(html)
-
+  
+  let html = await loadHTML()
+  html = html.replace(/(\r\n|\n|\r)/gm,"")
+  let follower = extractfollower(html)
+  
   // Create Timestamp
   let timeStamp = formatDate(new Date())
 
@@ -47,7 +61,7 @@ async function createWidget() {
   const followerFontSize = 35
   const statusFontSize = 10
   const textColor = Color.black()
-	
+
   let wfollower = widget.addText(follower);
   wfollower.font = Font.mediumRoundedSystemFont(followerFontSize)
   wfollower.textColor = textColor;
@@ -57,11 +71,14 @@ async function createWidget() {
   wDate.font = Font.mediumRoundedSystemFont(statusFontSize)
   wDate.textColor = textColor;
   wDate.centerAlignText();
+
+  return widget
 }
 
-function getfollower(html) {
+function extractfollower(html) {
   let followerStart = html.indexOf('"edge_followed_by":{"count":');
-  let followerEnd = html.indexOf('},"followed_by_viewer"', followerStart + 1);
+  console.log(followerStart);
+  let followerEnd = html.indexOf('},"fbid"', followerStart + 1);
   let follower = html.substring(followerStart + 28, followerEnd);
   console.log("follower: " + follower);  
   return follower;
@@ -85,24 +102,24 @@ async function getImage(image) {
   } else {
     // download once
     let imageUrl
-	
     switch (image) {
       case 'instagram-logo.png':
-        imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/132px-Instagram_logo_2016.svg.png";
+        console.log('case ig')
+        imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/132px-Instagram_logo_2016.svg.png";  
         break
-      default:
-        console.log(`Sorry, couldn't find ${image}.`);
-        break
-      }
-      let iconImage = await loadImage(imageUrl)
-      fm.writeImage(path, iconImage)
-      return iconImage
-   }
+    default:  
+      console.log(`Sorry, couldn't find ${image}.`);
+      break
+    }
+    let iconImage = await loadImage(imageUrl)
+    fm.writeImage(path, iconImage)
+    return iconImage  
+  }
 }
 
 // helper function to download an image from a given url
 async function loadImage(imgUrl) {
-  console.log('loadImage')
+  console.log('loadImage')  
   const req = new Request(imgUrl)
   return await req.loadImage()
 }
