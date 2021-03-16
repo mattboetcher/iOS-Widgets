@@ -6,6 +6,7 @@
 Version 1.1
 
 History:
+Version 1.2 - Changed the font size
 Version 1.1 - Fixed an issue where website was not loaded.
 Version 1.0 - First Version
 
@@ -58,7 +59,7 @@ async function createWidget() {
   wimg.centerAlignImage()
   widget.addSpacer()
 	
-  const followerFontSize = 35
+  const followerFontSize = 25
   const statusFontSize = 10
   const textColor = Color.black()
 
