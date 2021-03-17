@@ -3,7 +3,7 @@
 // icon-color: red; icon-glyph: magic;
 
 /**************************************************************
-Version 1.1
+Version 1.2
 
 History:
 Version 1.2 - Changed the font size
